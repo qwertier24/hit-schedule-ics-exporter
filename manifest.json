@@ -1,0 +1,15 @@
+﻿{
+    "name": "Export The Schedule from HIT JWTS",
+    "description": "导出课程表为ics格式",
+    "version": "0.1",
+    "minimum_chrome_version": "16.0.884",
+    "permissions": ["http://jwts.hit.edu.cn/*"],
+    "manifest_version": 2,
+    "content_scripts": [
+        {
+            "matches": ["http://jwts.hit.edu.cn/kbcx/queryGrkb*"],
+            "js": ["doit.js"],
+            "all_frames": true
+        }
+    ]
+}
