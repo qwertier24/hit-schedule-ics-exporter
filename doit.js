@@ -22,15 +22,34 @@ function get_name(str){
     return str;
 }
 
+function downloadFile(fileName, content) {
+    var aTag = document.createElement('a');
+    var blob = new Blob([content]);
+    aTag.download = fileName;
+    aTag.href = URL.createObjectURL(blob);
+    aTag.click();
+    URL.revokeObjectURL(blob);
+}
+
 function get_weeks(str){
     var ret = new Array();
-    var many_weeks = str.match(/[\d]+(-[\d]+)?/g);
+    var many_weeks = str.match(/[\d]+(-[\d]+[单双]?)?/g);
     for(var i in many_weeks){
         var weeks = many_weeks[i];
         if(weeks.split("-").length == 2){
-            var st = parseInt(weeks.split("-")[0]), ed = parseInt(weeks.split("-")[1]);
-            for(var j = st; j <= ed; j++)
-                ret.push(j);
+            var st_str = weeks.split("-")[0], ed_str = weeks.split("-")[1];
+            // alert(st_str);
+            // alert(ed_str);
+            var st = parseInt(st_str), ed = parseInt(ed_str);
+            if (ed_str[ed_str.length-1] == "单" || ed_str[ed_str.length-1] == "双") {
+                for (var j = st; j <= ed; j+=2) {
+                    ret.push(j);
+                }
+            } else {
+                for (var j = st; j <= ed; j++) {
+                    ret.push(j);
+                }
+            }
         }else{
             ret.push(parseInt(weeks));
         }
@@ -110,7 +129,9 @@ function doit(){
             ics_str += get_ics_str(courses[i]);
         }
         ics_str += "END:VCALENDAR";
-        window.open( "data:text/calendar;charset=utf8," + encodeURI(ics_str));
+        //alert("data:text/calendar;charset=utf8," + encodeURI(ics_str));
+        downloadFile("courses.ics", ics_str);
+        //window.open("data:text/calendar;charset=utf8," + encodeURI(ics_str));
     }
 };
 var div = document.getElementsByClassName("addlist_button1 ml15")[0];
@@ -136,4 +157,6 @@ case "2016夏":
 case "2016秋":
     first_day = new Date("2016/09/05");
     break;
+case "2017春":
+    first_day = new Date("2017/02/27");
 }
