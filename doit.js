@@ -41,14 +41,18 @@ function get_weeks(str){
             // alert(st_str);
             // alert(ed_str);
             var st = parseInt(st_str), ed = parseInt(ed_str);
-            if (ed_str[ed_str.length-1] == "单" || ed_str[ed_str.length-1] == "双") {
-                for (var j = st; j <= ed; j+=2) {
-                    ret.push(j);
-                }
+            if (ed_str[ed_str.length-1] == "单") {
+              for (var j = st + (st+1)%2; j <= ed - (ed+1)%2; j+=2) {
+                ret.push(j);
+              }
+            } else if (ed_str[ed_str.length-1] == "双") {
+              for (var j = st + st%2; j <= ed - ed%2; j+=2) {
+                ret.push(j);
+              }
             } else {
-                for (var j = st; j <= ed; j++) {
-                    ret.push(j);
-                }
+              for (var j = st; j <= ed; j++) {
+                ret.push(j);
+              }
             }
         }else{
             ret.push(parseInt(weeks));
