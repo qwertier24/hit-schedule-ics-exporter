@@ -1,4 +1,20 @@
-﻿function split_courses(courses) {
+﻿var replaceHtmlEntites = (function() {
+  var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+  var translate = {
+    "nbsp": " ",
+    "amp" : "&",
+    "quot": "\"",
+    "lt"  : "<",
+    "gt"  : ">"
+  };
+  return function(s) {
+    return ( s.replace(translate_re, function(match, entity) {
+      return translate[entity];
+    }) );
+  };
+})();
+
+function split_courses(courses) {
   var ret = new Array();
   for(var day = 0; day < 7; day++){
     for(var time = 0; time < 6; time++){
@@ -11,6 +27,8 @@
                              day : day,
                              time : time};
           ret.push(this_course);
+          this_course.str = replaceHtmlEntites(this_course.str);
+          console.log(this_course.str);
         }
       }
     }
@@ -68,7 +86,7 @@ function process_courses(courses){
   for(var i in courses){
     var course = courses[i];
     lines = course.str.split("\n");
-    var new_course
+    var new_course;
     if(lines.length == 4){
       new_course = {name : get_name(lines[0]),
                     weeks : get_weeks(lines[1]),
@@ -163,8 +181,10 @@ case "2016秋":
   break;
 case "2017春":
   first_day = new Date("2017/02/27");
+  break;
 case "2017夏":
   first_day = new Date("2017/07/03");
+  break;
 default:
   first_day = new Date(prompt("请输入学期开始时间，格式为2017/03/05"));
 }
